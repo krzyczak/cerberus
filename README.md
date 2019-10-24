@@ -9,7 +9,7 @@ TODO: Delete this and the text above, and describe your gem
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'cerberus'
+gem "cerberus"
 ```
 
 And then execute:
@@ -22,7 +22,25 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Configure Cerberus with required information:
+
+```ruby
+Cerberus.configure do |config|
+  config.jwt_rsa_public = ENV["JWT_RSA_PUBLIC"]
+  config.jwt_algorithm = "RS256"
+  config.jwt_issuer = "org.website.project"
+  config.jwt_skip_middleware_unless = -> { |env| Rails.env.production? }
+end
+
+require "cerberus/jwt"
+```
+
+And then just inject a middleware:
+
+```ruby
+config.middleware.use Cerberus::Jwt
+```
+
 
 ## Development
 

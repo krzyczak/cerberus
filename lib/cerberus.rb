@@ -16,10 +16,13 @@ module Cerberus
     yield(config)
     self.config.jwt = OpenStruct.new(self.config.jwt || {})
     self.config.jwt.skip_middleware_unless ||= -> { false }
+
+    self.config.basic = OpenStruct.new(self.config.basic || {})
+    self.config.basic.enabled ||= -> { true }
   end
 
   class Config
-    attr_accessor(:jwt)
+    attr_accessor(:jwt, :basic)
   end
 
   self.configure {}

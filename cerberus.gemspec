@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "cerberus/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "cerberus"
+  spec.name          = "cerber"
   spec.version       = Cerberus::VERSION
   spec.authors       = ["krzyczak"]
   spec.email         = ["krzyczak@users.noreply.github.com"]

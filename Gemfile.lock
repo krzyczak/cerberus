@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cerberus (0.1.2)
+    cerber (0.1.2)
       jwt (= 2.1.0)
 
 GEM
@@ -35,7 +35,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 2.0)
-  cerberus!
+  cerber!
   rack
   rack-test
   rake (~> 10.0)

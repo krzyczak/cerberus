@@ -1,15 +1,20 @@
+![](https://github.com/krzyczak/cerberus/workflows/Run%20RSpec%20Tests/badge.svg)
+![](https://github.com/krzyczak/cerberus/workflows/Run%20tests%20and%20build%20the%20Ruby%20Gem/badge.svg)
+
 # Cerberus
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/cerberus`. To experiment with that code, run `bin/console` for an interactive prompt.
+This gem provides various authentication middlewares.
 
-TODO: Delete this and the text above, and describe your gem
+At the moment there are two:
+* `Cerberus::Jwt`
+* `Cerberus::Basic`
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "cerberus"
+gem "cerber", require: "cerberus"
 ```
 
 And then execute:
@@ -18,39 +23,44 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install cerberus
+    $ gem install cerber
 
 ## Usage
 
 Configure Cerberus with required information:
 
 ```ruby
+require "cerberus"
+
 Cerberus.configure do |config|
-  config.jwt_rsa_public = ENV["JWT_RSA_PUBLIC"]
-  config.jwt_algorithm = "RS256"
-  config.jwt_issuer = "org.website.project"
-  config.jwt_skip_middleware_unless = -> { |env| Rails.env.production? }
+  config.jwt = {
+    rsa_public: ENV["JWT_RSA_PUBLIC"],
+    algorithm: "RS256",
+    issuer: "org.website.project",
+    enabled: ->(env) { Rails.env.production? }
+  }.freeze
+
+  config.basic = {
+    username_digest: ::Digest::SHA256.hexdigest("test"),
+    password_digest: ::Digest::SHA256.hexdigest("test"),
+    enabled: ->(env) { env["PATH_INFO"].start_with?("/protected") }
+  }.freeze
 end
 
 require "cerberus/jwt"
+require "cerberus/basic"
 ```
 
 And then just inject a middleware:
 
 ```ruby
 config.middleware.use Cerberus::Jwt
+config.middleware.use Cerberus::Basic
 ```
-
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/cerberus.
+Bug reports and pull requests are welcome on GitHub at https://github.com/krzyczak/cerberus.
 
 ## License
 
